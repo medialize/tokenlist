@@ -4,6 +4,65 @@ This module is an implementation of the [DOMTokenList Interface](https://dom.spe
 
 This module was created to investigate further application for DOMTokenList (as Brian's tokenListFor does), while simultaneously serving as a polyfill for [`classList`](https://developer.mozilla.org/en/docs/Web/API/Element/classList) and [`relList`](https://developer.mozilla.org/en-US/docs/Web/API/HTMLLinkElement/relList).
 
+## The TokenList interface
+
+The [DOMTokenList interace](https://dom.spec.whatwg.org/#interface-domtokenlist) does not specify any constructors. This implementation accepts callback functions to read and write tokens, thereby decoupling itself from the DOM:
+
+```js
+var element = document.body;
+
+var classList = TokenList(
+  // callback used to read the current serialized presentation of the DOMTokenList
+  function readString() { return element.getAttribute('class'); },
+  // callback used to store the modified serialized presentation of the DOMTokenList
+  function writeString(value) { element.getAttribute('class', value); }
+);
+
+classList.add('gustav');
+classList.contains('gustav') === true;
+classList.remove('gustav');
+```
+
+### Supported tokens
+
+Some DOMTokenLists may know the accepted ("supported") tokens, which can be provided to TokenList via an optional callback, as shown here for the [`<iframe>`'s sandbox attribute](https://developer.mozilla.org/en/docs/Web/HTML/Element/iframe#attr-sandbox):
+
+```js
+var element = document.getElementById('iframe');
+
+var sandboxValues = [
+  'allow-modals',
+  'allow-orientation-lock',
+  'allow-pointer-lock',
+  'allow-popups', that functionality will silently fail.
+  'allow-popups-to-escape-sandbox',
+  'allow-same-origin',
+  'allow-scripts',
+  'allow-top-navigation',
+];
+
+var sandboxList = TokenList(
+  // callback used to read the current serialized presentation of the DOMTokenList
+  function readString() { return element.getAttribute('sandbox'); },
+  // callback used to store the modified serialized presentation of the DOMTokenList
+  function writeString(value) { element.getAttribute('sandbox', value); },
+
+  // [optional] callback to verify if a token is to be considered supported
+  // defaults to null, causing TokenList#supported() to throw an appropriate error
+  function supported(token) { return sandboxValues.indexOf(token) !== -1; }
+);
+
+sandboxList.add('allow-modals');
+sandboxList.contains('allow-modals') === true;
+sandboxList.remove('allow-modals');
+
+sandboxList.supports('allow-modals') == true;
+sandboxList.supports('not-supported-token-value') === false;
+
+// NOTE: unsupported values are still added to the list
+sandboxList.add('not-supported-token-value');
+```
+
 
 ## Other implementations
 
