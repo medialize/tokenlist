@@ -1,0 +1,29 @@
+{
+  "name": "tokenlist",
+  "version": "0.0.1",
+  "description": "DOMTokenList implementation",
+  "main": "src/tokenlist.js",
+  "scripts": {
+    "test": "intern-client config=tests/node",
+    "test:server": "intern-runner config=tests/browser",
+    "lint": "eslint src/**/*.js tests/**/*.js"
+  },
+  "author": "Rodney Rehm <rodney.rehm@medialize.de> (http://rodneyrehm.de/en/)",
+  "license": "MIT",
+  "keywords": [
+    "DOMTokenList",
+    "classList",
+    "relList",
+    "tokenListFor",
+    "polyfill",
+    "shim"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/medialize/tokenlist.git"
+  },
+  "devDependencies": {
+    "eslint": "^2.7.0",
+    "intern": "^3.1.1"
+  }
+}
