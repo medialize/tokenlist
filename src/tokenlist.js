@@ -43,7 +43,11 @@
     }
   }
 
-  return function(read, write, supported) {
+  function passthru(value) {
+    return value;
+  }
+
+  return function(read, write, supported, decode, encode) {
 
     var getTokens = function() {
       var value = read();
@@ -58,6 +62,14 @@
       write(tokens.join(' '));
     };
 
+    if (!decode) {
+      decode = passthru;
+    }
+
+    if (!encode) {
+      encode = passthru;
+    }
+
     var TokenList = {
       // https://dom.spec.whatwg.org/#dom-domtokenlist-stringifier
       toString: read,
@@ -70,7 +82,7 @@
           index = 0;
         }
 
-        return getTokens()[index] || null;
+        return decode(getTokens()[index] || null);
       },
 
       // https://dom.spec.whatwg.org/#dom-domtokenlist-contains
@@ -78,17 +90,18 @@
         // NOTE: unspecified behavior, but implemented in Gecko and Blink
         verifyToken(token);
 
-        return getTokens().indexOf(token) !== -1;
+        return getTokens().indexOf(encode(token)) !== -1;
       },
 
       // https://dom.spec.whatwg.org/#dom-domtokenlist-add
       add: function() {
-        [].forEach.call(arguments, verifyToken);
+        var input = [].map.call(arguments, encode);
+        input.forEach(verifyToken);
 
         var tokens = getTokens();
         var length = tokens.length;
 
-        [].forEach.call(arguments, function(token) {
+        input.forEach(function(token) {
           if (tokens.indexOf(token) === -1) {
             tokens.push(token);
           }
@@ -102,7 +115,7 @@
       // https://dom.spec.whatwg.org/#dom-domtokenlist-remove
       remove: function() {
         var map = {};
-        [].forEach.call(arguments, function(token) {
+        [].map.call(arguments, encode).forEach(function(token) {
           verifyToken(token);
           map[token] = true;
         });
@@ -119,6 +132,7 @@
 
       // https://dom.spec.whatwg.org/#dom-domtokenlist-toggle
       toggle: function(token, force) {
+        token = encode(token);
         verifyToken(token);
 
         var tokens = getTokens();
@@ -154,6 +168,9 @@
       // Note: will collapse duplicates, i.e. replace("a", "x")
       // will turn "c a b a a d" into "c x b d",
       replace: function(oldToken, newToken) {
+        oldToken = encode(oldToken);
+        newToken = encode(newToken);
+
         verifyToken(oldToken);
         verifyToken(newToken);
 
@@ -175,6 +192,8 @@
       // https://dom.spec.whatwg.org/#dom-domtokenlist-supports
       // https://developer.mozilla.org/en-US/docs/Web/API/DOMTokenList/supports
       supports: function(token) {
+        token = encode(token);
+
         if (supported) {
           return Boolean(supported(token.toLowerCase()));
         }

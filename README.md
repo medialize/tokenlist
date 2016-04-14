@@ -63,6 +63,34 @@ sandboxList.supports('not-supported-token-value') === false;
 sandboxList.add('not-supported-token-value');
 ```
 
+### Encoded token values
+
+As tokens may represent entities, their values can be encoded and decoded via optional callbacks, as shown here for the [aria-labelledby attribute](http://w3c.github.io/aria/aria/aria.html#aria-labelledby):
+
+```js
+var element = document.getElementById('target');
+
+var labelledByList = TokenList(
+  // callback used to read the current serialized presentation of the DOMTokenList
+  function readString() { return element.getAttribute('aria-labelledby'); },
+  // callback used to store the modified serialized presentation of the DOMTokenList
+  function writeString(value) { element.getAttribute('aria-labelledby', value); },
+
+  // ignore supported()
+  null,
+
+  // [optional] callback used to decode a token (string) to another object
+  function decode(token) { return token ? document.getElementById(token) : null; },
+  // [optional] callback used to encode an object to a string token
+  function encode(input) { return input ? input.id : null; }
+);
+
+var label = document.getElementById('label');
+labelledByList.add(label);
+labelledByList.contains(label) === true;
+labelledByList.remove(label);
+```
+
 
 ## Other implementations
 

@@ -484,6 +484,59 @@ define(function(require) {
         expect(step.done).to.equal(true, 'terminal iteration');
       });
     });
+
+    // NOTE: unspecified behavior, but required for providing the same API for ID reference lists,
+    // e.g. for http://w3c.github.io/aria/aria/aria.html#aria-labelledby
+    bdd.describe('for refList support', function() {
+      var source;
+      var list = TokenList(
+        function() { return source; },
+        function(value) { source = value; },
+        function(value) { return value === 'alpha'; },
+        function decode(token) { return token && token.toUpperCase() || token; },
+        function encode(input) { return input && input.toLowerCase() || input; }
+      );
+
+      bdd.beforeEach(function() {
+        source = 'alpha bravo charlie';
+      });
+
+      bdd.it('item() should return decoded value', function() {
+        expect(list.item(0)).to.equal('ALPHA');
+      });
+
+      bdd.it('contains() should ingest encoded value', function() {
+        expect(list.contains('ALPHA')).to.equal(true);
+      });
+
+      bdd.it('add() should ingest encoded value', function() {
+        list.add('ALPHA', 'DELTA');
+        expect(source).to.equal('alpha bravo charlie delta');
+      });
+
+      bdd.it('remove() should ingest encoded value', function() {
+        list.remove('ALPHA', 'DELTA');
+        expect(source).to.equal('bravo charlie');
+      });
+
+      bdd.it('toggle() should ingest encoded value', function() {
+        list.toggle('BRAVO');
+        expect(source).to.equal('alpha charlie', 'removing BRAVO');
+
+        list.toggle('DELTA');
+        expect(source).to.equal('alpha charlie delta', 'adding DELTA');
+      });
+
+      bdd.it('replace() should ingest encoded value', function() {
+        list.replace('BRAVO', 'DELTA');
+        expect(source).to.equal('alpha delta charlie');
+      });
+
+      bdd.it('supports() should ingest encoded value', function() {
+        expect(list.supports('ALPHA')).to.equal(true, 'supported value');
+        expect(list.supports('BRAVO')).to.equal(false, 'unsupported value');
+      });
+    });
   });
 
 });
