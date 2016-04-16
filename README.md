@@ -106,6 +106,25 @@ While all [modern browsers have a DOMTokenList implementation](http://caniuse.co
 * Except for WebKit Nightly, no browser properly implemented the [ordered set parser](https://dom.spec.whatwg.org/#concept-ordered-set-parser), which may lead to undesired behavior when dealing with duplicate tokens (e.g. for `<div class="a b a c">` the `.classList.length` *should* yield `3`, but *erroneously* shows `4`).
 * The `classList.value` property is not available everywhere.
 
+## The prollyfill
+
+Based on [WICG tokenListFor() proposal](https://discourse.wicg.io/t/proposal-for-astokenlist-attr/1418/20) this package provides `Element.prototype._tokenListFor()` and `Element.prototype._referenceListFor()`.
+
+```js
+var element = document.body;
+
+// standard way to obtain the classList:
+var tokenlist = element.classList
+tokenlist.contains('some-class');
+
+// prollyfill way to option the classlist:
+var tokenlist = element._tokenListFor('class');
+tokenlist.contains('some-class');
+
+// resolving ID-References
+var labels = element._referenceListFor('aria-labelledby');
+labels.contains(document.getElementById('some-label'));
+```
 
 ## Other implementations
 
