@@ -124,10 +124,11 @@
 
       // https://dom.spec.whatwg.org/#dom-domtokenlist-contains
       contains: function(token) {
+        token = encode(token);
         // NOTE: unspecified behavior, but implemented in Gecko and Blink
         verifyToken(token);
 
-        return getTokens().indexOf(encode(token)) !== -1;
+        return getTokens().indexOf(token) !== -1;
       },
 
       // https://dom.spec.whatwg.org/#dom-domtokenlist-add
