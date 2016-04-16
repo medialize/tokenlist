@@ -5,6 +5,7 @@
   "main": "src/tokenlist.js",
   "scripts": {
     "test": "intern-client config=tests/node",
+    "test:browserstack": "intern-runner config=tests/browserstack",
     "test:server": "intern-runner config=tests/browser",
     "lint": "eslint src/**/*.js tests/**/*.js"
   },
