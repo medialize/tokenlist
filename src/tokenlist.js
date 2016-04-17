@@ -80,6 +80,12 @@
       write(serialize(tokens));
     };
 
+    var stringify = function() {
+      // currently specifed as `return read()` but about to change back
+      // see https://github.com/whatwg/dom/issues/105
+      return serialize(getTokens());
+    };
+
     if (!decode) {
       decode = passthru;
     }
@@ -90,7 +96,7 @@
 
     var TokenList = {
       // https://dom.spec.whatwg.org/#dom-domtokenlist-stringifier
-      toString: read,
+      toString: stringify,
 
       // https://dom.spec.whatwg.org/#dom-domtokenlist-item
       item: function(index) {
@@ -230,8 +236,10 @@
 
       // https://dom.spec.whatwg.org/#dom-domtokenlist-value
       value: {
-        get: read,
-        set: write,
+        get: stringify,
+        set: function(value) {
+          setTokens(parse(value));
+        },
       },
     });
 

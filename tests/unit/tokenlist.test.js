@@ -12,14 +12,17 @@ define(function(require) {
       undefined: {
         tokens: [],
         value: undefined,
+        serialized: '',
       },
       null: {
         tokens: [],
         value: null,
+        serialized: '',
       },
       empty: {
         tokens: [],
         value: '',
+        serialized: '',
       },
       whitespace: {
         tokens: [],
@@ -29,21 +32,25 @@ define(function(require) {
       single: {
         tokens: ['alpha'],
         value: 'alpha',
+        serialized: 'alpha',
       },
       multiple: {
         tokens: ['alpha', 'bravo', 'charlie'],
         value: 'alpha bravo charlie',
+        serialized: 'alpha bravo charlie',
       },
       duplicate: {
         tokens: ['alpha', 'bravo', 'charlie'],
         value: 'alpha bravo alpha charlie alpha',
+        serialized: 'alpha bravo charlie',
       },
       spaces: {
         // NO-BREAK-SPACE in "bravo"
         // EM-QUAD in "charlie"
         // THIN-SPACE as token between delta and echo
         tokens: ['alpha', 'bra\u00A0vo', 'char\u2001lie', 'delta', '\u2009', 'echo'],
-        value: 'alpha  bra\u00A0vo char\u2001lie delta \u2009 echo',
+        value: '  alpha  bra\u00A0vo char\u2001lie delta \u2009 echo \r ',
+        serialized: 'alpha bra\u00A0vo char\u2001lie delta \u2009 echo',
       },
     };
 
@@ -60,10 +67,10 @@ define(function(require) {
 
     // https://dom.spec.whatwg.org/#dom-domtokenlist-stringifier
     bdd.describe('for method toString()', function() {
-      bdd.it('should return the source value verbatim', function() {
+      bdd.it('should not return the source value verbatim', function() {
         Object.keys(data).forEach(function(property) {
           var list = getTokenlistFor(property);
-          expect(list.toString()).to.equal(data[property].value, 'value of data.' + property);
+          expect(list.toString()).to.equal(data[property].serialized, 'value of data.' + property);
         });
       });
     });
@@ -444,18 +451,18 @@ define(function(require) {
 
     // https://dom.spec.whatwg.org/#dom-domtokenlist-value
     bdd.describe('for property value', function() {
-      bdd.it('should return the source value verbatim', function() {
+      bdd.it('should not return the source value verbatim', function() {
         Object.keys(data).forEach(function(property) {
           var list = getTokenlistFor(property);
-          expect(list.value).to.equal(data[property].value, 'value of data.' + property);
+          expect(list.value).to.equal(data[property].serialized, 'value of data.' + property);
         });
       });
 
-      bdd.it('should set the source value verbatim', function() {
+      bdd.it('should not set the source value verbatim', function() {
         Object.keys(data).forEach(function(property) {
           var list = getTokenlistFor('empty');
           list.value = data[property].value;
-          expect(result).to.equal(data[property].value, 'value of data.' + property);
+          expect(result).to.equal(data[property].serialized, 'value of data.' + property);
         });
       });
     });
