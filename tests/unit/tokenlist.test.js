@@ -21,6 +21,11 @@ define(function(require) {
         tokens: [],
         value: '',
       },
+      whitespace: {
+        tokens: [],
+        value: '  ',
+        serialized: '',
+      },
       single: {
         tokens: ['alpha'],
         value: 'alpha',
@@ -30,7 +35,7 @@ define(function(require) {
         value: 'alpha bravo charlie',
       },
       duplicate: {
-        tokens: ['alpha', 'bravo', 'alpha', 'charlie', 'alpha'],
+        tokens: ['alpha', 'bravo', 'charlie'],
         value: 'alpha bravo alpha charlie alpha',
       },
       spaces: {
@@ -325,14 +330,6 @@ define(function(require) {
         var returned = list.toggle('delta');
         expect(returned).to.equal(true, 'return value');
         expect(result).to.equal('alpha bravo charlie delta', 'serialized value');
-      });
-
-      bdd.it('should add missing token preserving existing duplicates', function() {
-        var list = getTokenlistFor('duplicate');
-
-        var returned = list.toggle('delta');
-        expect(returned).to.equal(true, 'return value');
-        expect(result).to.equal('alpha bravo alpha charlie alpha delta', 'serialized value');
       });
 
       bdd.it('should force add token', function() {

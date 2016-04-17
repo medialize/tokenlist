@@ -47,19 +47,37 @@
     return value;
   }
 
+  // https://dom.spec.whatwg.org/#concept-ordered-set-parser
+  function parse(text) {
+    text = text && text.trim() || '';
+    if (!text) {
+      return [];
+    }
+
+    var lookup = {};
+    return text.split(asciiWhiteSpace).filter(function(token) {
+      if (lookup[token]) {
+        return false;
+      }
+
+      lookup[token] = true;
+      return true;
+    });
+  }
+
+  // https://dom.spec.whatwg.org/#concept-ordered-set-serializer
+  function serialize(tokens) {
+    return tokens.join(' ');
+  }
+
   return function(read, write, supported, decode, encode) {
 
     var getTokens = function() {
-      var value = read();
-      if (!value) {
-        return [];
-      }
-
-      return value.trim().split(asciiWhiteSpace);
+      return parse(read());
     };
 
     var setTokens = function(tokens) {
-      write(tokens.join(' '));
+      write(serialize(tokens));
     };
 
     if (!decode) {
