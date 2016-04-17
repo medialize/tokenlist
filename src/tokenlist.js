@@ -20,6 +20,7 @@
   }
 }(this, function() {
   'use strict';
+  /*global Symbol */
 
   // https://encoding.spec.whatwg.org/#ascii-whitespace
   // TAB, VT, FF, CR, Space
@@ -58,8 +59,6 @@
     };
 
     var TokenList = {
-      // Note: does not implement iterable<DOMString>;
-
       // https://dom.spec.whatwg.org/#dom-domtokenlist-stringifier
       toString: read,
 
@@ -198,6 +197,22 @@
         set: write,
       },
     });
+
+    // iterable<DOMString> https://dom.spec.whatwg.org/#interface-domtokenlist
+    var _iterator = typeof Symbol !== 'undefined' ? Symbol.iterator : '@@iterator';
+    TokenList[_iterator] = function() {
+      var tokens = getTokens();
+      var index = 0;
+
+      // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols
+      return {
+        next: function() {
+          return index < tokens.length
+            ? { value: tokens[index++], done: false }
+            : { value: undefined, done: true };
+        },
+      };
+    };
 
     return TokenList;
   };

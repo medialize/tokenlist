@@ -1,5 +1,6 @@
 define(function(require) {
   'use strict';
+  /*global Symbol */
 
   var bdd = require('intern!bdd');
   var expect = require('intern/chai!expect');
@@ -459,6 +460,28 @@ define(function(require) {
           list.value = data[property].value;
           expect(result).to.equal(data[property].value, 'value of data.' + property);
         });
+      });
+    });
+
+    // https://dom.spec.whatwg.org/#interface-domtokenlist
+    bdd.describe('for Iterator', function() {
+      bdd.it('should return tokens', function() {
+        var _iterator = typeof Symbol !== 'undefined' ? Symbol.iterator : '@@iterator';
+        var list = getTokenlistFor('multiple');
+        var iterator = list[_iterator]();
+        var step;
+
+        step = iterator.next();
+        expect(step.value).to.equal('alpha', 'first iteration');
+
+        step = iterator.next();
+        expect(step.value).to.equal('bravo', 'second iteration');
+
+        step = iterator.next();
+        expect(step.value).to.equal('charlie', 'last iteration');
+
+        step = iterator.next();
+        expect(step.done).to.equal(true, 'terminal iteration');
       });
     });
   });
