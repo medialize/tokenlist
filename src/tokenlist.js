@@ -70,6 +70,13 @@
     return tokens.join(' ');
   }
 
+  function removeFromArray(list, item) {
+    var index = list.indexOf(item);
+    if (index !== -1) {
+      list.splice(index, 1);
+    }
+  }
+
   return function(read, write, supported, decode, encode) {
 
     var getTokens = function() {
@@ -138,19 +145,17 @@
 
       // https://dom.spec.whatwg.org/#dom-domtokenlist-remove
       remove: function() {
-        var map = {};
-        [].map.call(arguments, encode).forEach(function(token) {
-          verifyToken(token);
-          map[token] = true;
-        });
+        var input = [].map.call(arguments, encode);
+        input.forEach(verifyToken);
 
         var tokens = getTokens();
-        var _tokens = tokens.filter(function(token) {
-          return !map[token];
+        var length = tokens.length;
+        input.forEach(function(token) {
+          removeFromArray(tokens, token);
         });
 
-        if (_tokens.length !== tokens.length) {
-          setTokens(_tokens);
+        if (tokens.length !== length) {
+          setTokens(tokens);
         }
       },
 
@@ -164,12 +169,8 @@
 
         if (exists) {
           if (!force) {
-            // removal of existing token
-            var _tokens = tokens.filter(function(_token) {
-              return _token !== token;
-            });
-
-            setTokens(_tokens);
+            removeFromArray(tokens, token);
+            setTokens(tokens);
             return false;
           }
 
