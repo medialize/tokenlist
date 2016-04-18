@@ -2,12 +2,17 @@
   "name": "tokenlist",
   "version": "0.0.1",
   "description": "DOMTokenList implementation",
-  "main": "src/tokenlist.js",
+  "main": "dist/tokenlist.min.js",
   "scripts": {
     "test": "intern-client config=tests/node",
     "test:browserstack": "intern-runner config=tests/browserstack",
     "test:server": "intern-runner config=tests/browser",
-    "lint": "eslint src/**/*.js tests/**/*.js"
+    "lint": "eslint src/**/*.js tests/**/*.js",
+    "build": "npm run build:bundle && npm run build:min",
+    "prebuild": "mkdirp dist",
+    "postbuild": "rimraf dist/tokenlist.js*",
+    "build:bundle": "browserify src/index.js --debug --standalone TokenList | exorcist dist/tokenlist.js.map > dist/tokenlist.js",
+    "build:min": "uglifyjs dist/tokenlist.js --in-source-map dist/tokenlist.js.map --source-map dist/tokenlist.min.js.map --source-map-url tokenlist.min.js.map --preamble \"/*! ${npm_package_name} - v${npm_package_version} - ${npm_package_homepage} - ${npm_package_license} License */\" --mangle --compress --output dist/tokenlist.min.js"
   },
   "author": "Rodney Rehm <rodney.rehm@medialize.de> (http://rodneyrehm.de/en/)",
   "license": "MIT",
@@ -24,7 +29,11 @@
     "url": "https://github.com/medialize/tokenlist.git"
   },
   "devDependencies": {
+    "browserify": "^13.0.0",
     "eslint": "^2.7.0",
-    "intern": "^3.1.1"
+    "exorcist": "^0.4.0",
+    "intern": "^3.1.1",
+    "mkdirp": "^0.5.1",
+    "uglifyjs": "^2.4.10"
   }
 }
