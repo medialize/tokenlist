@@ -20,7 +20,7 @@
   }
 }(this, function() {
   'use strict';
-  /*global Symbol */
+  /*global Symbol, Proxy */
 
   // https://encoding.spec.whatwg.org/#ascii-whitespace
   // TAB, VT, FF, CR, Space
@@ -79,8 +79,14 @@
 
   return function(read, write, supported, decode, encode) {
 
+    // noop in case we're able to use Proxy,
+    // overwritten at the end of the file if not.
+    var updateGetterProxy = function(){};
+
     var getTokens = function() {
-      return parse(read());
+      var tokens = parse(read());
+      updateGetterProxy(tokens.length);
+      return tokens;
     };
 
     var setTokens = function(tokens) {
@@ -259,6 +265,43 @@
         },
       };
     };
+
+    if (typeof Proxy !== 'undefined') {
+      var numericPattern = /^\d+$/;
+      return new Proxy(TokenList, {
+        get: function(target, property) {
+          var value = target[property];
+          if (value !== undefined) {
+            return value;
+          }
+
+          if (!numericPattern.test(property)) {
+            return undefined;
+          }
+
+          return TokenList.item(property) || undefined;
+        },
+      });
+    } else {
+      // https://github.com/Alhadis/DOMTokenList/blob/v1.0.0/src/token-list.js#L69-L81
+      var registeredGetters = 0;
+      var proxyItem = function(key) {
+        Object.defineProperty(TokenList, key, {
+          configurable: false,
+          get: function() {
+            return TokenList.item(key) || undefined;
+          },
+        });
+      };
+
+      updateGetterProxy = function(length) {
+        for (; registeredGetters <= length; registeredGetters++) {
+          proxyItem(registeredGetters);
+        }
+      };
+
+      TokenList.item(0);
+    }
 
     return TokenList;
   };

@@ -93,6 +93,31 @@ define(function(require) {
       });
     });
 
+    // https://dom.spec.whatwg.org/#dom-domtokenlist-item (getter)
+    bdd.describe('for getter', function() {
+      bdd.it('should return the token at given index', function() {
+        var source = data.multiple.value;
+        var list = TokenList(
+          function() { return source; },
+          function(value) { source = value; }
+        );
+
+        expect(list[0]).to.equal(data.multiple.tokens[0], 'first item');
+        expect(list[2]).to.equal(data.multiple.tokens[2], 'last item');
+        expect(list[3]).to.equal(undefined, 'unknown item');
+        list.add('zulu');
+        expect(list[3]).to.equal('zulu', 'added item');
+      });
+
+      bdd.it('should not convert non-numeric index', function() {
+        // NOTE: unspecified behavior, but implemented in Gecko and Blink
+        var list = getTokenlistFor('multiple');
+        expect(list[-1]).to.equal(undefined, 'negative index');
+        expect(list[0.5]).to.equal(undefined, 'decimal index');
+        expect(list['string']).to.equal(undefined, 'string index');
+      });
+    });
+
     // https://dom.spec.whatwg.org/#dom-domtokenlist-contains
     bdd.describe('for method contains()', function() {
       bdd.it('should return true for known tokens', function() {
