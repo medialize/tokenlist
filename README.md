@@ -6,7 +6,7 @@ This module was created to investigate further application for DOMTokenList (as 
 
 ## The TokenList interface
 
-The [DOMTokenList interace](https://dom.spec.whatwg.org/#interface-domtokenlist) does not specify any constructors. This implementation accepts callback functions to read and write tokens, thereby decoupling itself from the DOM:
+The [DOMTokenList interface](https://dom.spec.whatwg.org/#interface-domtokenlist) does not specify any constructors. This implementation accepts callback functions to read and write tokens, thereby decoupling itself from the DOM:
 
 ```js
 var element = document.body;
@@ -109,10 +109,10 @@ While all [modern browsers have a DOMTokenList implementation](http://caniuse.co
 
 ## Other implementations
 
-* [jwilsson/domtokenlist](https://github.com/jwilsson/domtokenlist) is a polyfill for `classList` and `relList` also works for SVG.
-* [Alhadis/DOMTokenList](https://github.com/Alhadis/DOMTokenList) is a polyfill for `classList` and `relList` also works for SVG and supports "live collections". Does not include unit tests.
-* [necolas/dom-shims](https://github.com/necolas/dom-shims) specifically [Element.classList.js](https://github.com/necolas/dom-shims/blob/master/shim/Element.classList.js) and [DomTokenList.js](https://github.com/necolas/dom-shims/blob/master/lib/DOMTokenList.js)
-* [bkardell/tokenListFor](https://github.com/bkardell/tokenListFor) is an implementation for the [WICG tokenListFor() proposal](https://discourse.wicg.io/t/proposal-for-astokenlist-attr/1418/20). Does not include unit tests.
+* [jwilsson/domtokenlist](https://github.com/jwilsson/domtokenlist) is a polyfill for `classList` and `relList` also works for SVG. Works with browser globals.
+* [Alhadis/DOMTokenList](https://github.com/Alhadis/DOMTokenList) is a polyfill for `classList` and `relList` also works for SVG and supports "live collections". Does not include unit tests. Does not expose DOMTokenList implementation for other applications. Uses deprecated [`DOMAttrModified`](https://developer.mozilla.org/en-US/docs/Web/Guide/Events/Mutation_events) on SVG polyfill. Trips over unicode whitespace. Weird choice of code style.
+* [necolas/dom-shims](https://github.com/necolas/dom-shims) specifically [Element.classList.js](https://github.com/necolas/dom-shims/blob/master/shim/Element.classList.js) and [DomTokenList.js](https://github.com/necolas/dom-shims/blob/master/lib/DOMTokenList.js). CommonJS module. Trips over unicode whitespace.
+* [bkardell/tokenListFor](https://github.com/bkardell/tokenListFor) is an implementation for the [WICG tokenListFor() proposal](https://discourse.wicg.io/t/proposal-for-astokenlist-attr/1418/20). Does not include unit tests. Trips over unicode whitespace.
 
 
 ## License
