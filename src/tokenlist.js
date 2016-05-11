@@ -213,11 +213,7 @@
         }
 
         tokens[index] = newToken;
-        var _tokens = tokens.filter(function(token) {
-          return token !== oldToken;
-        });
-
-        setTokens(_tokens);
+        setTokens(tokens);
       },
 
       // https://dom.spec.whatwg.org/#dom-domtokenlist-supports
