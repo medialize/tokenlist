@@ -41,6 +41,7 @@ define(function(require) {
 
     bdd.it('should be a function', function() {
       expect(prollyfill).to.be.a('function');
+      prollyfill(window);
     });
 
     function makeListTests(element) {

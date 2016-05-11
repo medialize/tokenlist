@@ -6,19 +6,18 @@
     https://github.com/bkardell/tokenListFor/blob/master/_tokenListFor.js
     https://github.com/jwilsson/domtokenlist/blob/master/src/DOMTokenList.js
 */
-(function (root, factory) {
-  'use strict';
-
+(function (factory) {
   if (typeof exports === 'object') {
     // Node
     module.exports = factory();
   } else if (typeof define === 'function' && define.amd) {
     // AMD. Register as an anonymous module.
     define([], factory);
-  } else {
-    root.TokenList = factory();
+  } else if (typeof self !== 'undefined') {
+    // Browser globals
+    self.TokenList = factory();
   }
-}(this, function() {
+}(function() {
   'use strict';
   /*global Symbol, Proxy */
 

@@ -20,6 +20,7 @@ define(function(require) {
 
     bdd.it('should be a function', function() {
       expect(polyfill).to.be.a('function');
+      polyfill(window);
     });
 
     function makeClassListTests(element, property, attribute) {
