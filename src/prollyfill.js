@@ -1,19 +1,18 @@
-(function (root, factory) {
-  'use strict';
-
+(function (factory) {
   if (typeof exports === 'object') {
     // Node
-    module.exports = factory(require('./tokenlist'), root);
+    module.exports = factory(require('./tokenlist'));
   } else if (typeof define === 'function' && define.amd) {
     // AMD. Register as an anonymous module.
     define(['./tokenlist'], function(TokenList) {
-      return factory(TokenList, root);
+      return factory(TokenList);
     });
-  } else {
+  } else if (typeof self !== 'undefined') {
     // Browser globals
-    factory(root.TokenList, root);
+    factory(self.TokenList);
   }
-}(this, function(TokenList, root) {
+}(function(TokenList) {
+  'use strict';
 
   // https://discourse.wicg.io/t/proposal-for-astokenlist-attr/1418/7
   function getTokenListFor(attribute) {
@@ -40,7 +39,7 @@
   }
 
   function prollyfill(context) {
-    if (!context || !context.document) {
+    if (!context || !context.document || !context.document.documentElement.appendChild.bind) {
       return;
     }
 
@@ -56,9 +55,6 @@
       }
     });
   }
-
-  // patch the current context (window)
-  prollyfill(root);
 
   // in case we need to apply this to an iframe
   return prollyfill;

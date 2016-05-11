@@ -105,6 +105,7 @@ While all [modern browsers have a DOMTokenList implementation](http://caniuse.co
 
 * Except for WebKit Nightly, no browser properly implemented the [ordered set parser](https://dom.spec.whatwg.org/#concept-ordered-set-parser), which may lead to undesired behavior when dealing with duplicate tokens (e.g. for `<div class="a b a c">` the `.classList.length` *should* yield `3`, but *erroneously* shows `4`).
 * The `classList.value` property is not available everywhere.
+* Requires ES5 (es5-shim will not work), so IE9+
 
 ## The prollyfill
 

@@ -1,19 +1,18 @@
-(function (root, factory) {
-  'use strict';
-
+(function (factory) {
   if (typeof exports === 'object') {
     // Node
-    module.exports = factory(require('./tokenlist'), root);
+    module.exports = factory(require('./tokenlist'));
   } else if (typeof define === 'function' && define.amd) {
     // AMD. Register as an anonymous module.
     define(['./tokenlist'], function(TokenList) {
-      return factory(TokenList, root);
+      return factory(TokenList);
     });
-  } else {
+  } else if (typeof self !== 'undefined') {
     // Browser globals
-    factory(root.TokenList, root);
+    factory(self.TokenList);
   }
-}(this, function(TokenList, root) {
+}(function(TokenList) {
+  'use strict';
 
   function tokenListForElementAttribute(element, attribute) {
     return TokenList(
@@ -47,7 +46,7 @@
   }
 
   function polyfill(context) {
-    if (!context || !context.document) {
+    if (!context || !context.document || !context.document.documentElement.appendChild.bind) {
       return;
     }
 
@@ -57,7 +56,7 @@
 
     if (!hasClassList) {
       // https://github.com/jwilsson/domtokenlist/blob/master/src/classList.js
-      Object.defineProperty(Element.prototype, 'classList', {
+      Object.defineProperty(context.Element.prototype, 'classList', {
         get: getClassList,
       });
     }
@@ -66,15 +65,15 @@
     var hasSvgClassList = 'classList' in svg;
     if (!hasSvgClassList) {
       // https://developer.microsoft.com/en-us/microsoft-edge/platform/issues/1173756/
-      Object.defineProperty(SVGElement.prototype, 'classList', {
+      Object.defineProperty(context.SVGElement.prototype, 'classList', {
         get: getClassList,
       });
     }
 
     // https://github.com/jwilsson/domtokenlist/blob/master/src/relList.js
     if (!hasRelList) {
-      [context.HTMLAnchorElement, context.HTMLAreaElement, context.HTMLLinkElement].forEach(function(object) {
-        Object.defineProperty(object.prototype, 'relList', {
+      ['HTMLAnchorElement', 'HTMLAreaElement', 'HTMLLinkElement'].forEach(function(object) {
+        Object.defineProperty(context[object].prototype, 'relList', {
           get: getRelList,
         });
       });
@@ -148,9 +147,6 @@
     // a reference to the original element in order to set the
     // attribute's value verbatim, as required by the spec
   }
-
-  // patch the current context (window)
-  polyfill(root);
 
   // in case we need to apply this to an iframe
   return polyfill;
