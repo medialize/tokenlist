@@ -21,7 +21,7 @@
     "classList",
     "relList",
     "tokenListFor",
-    "polyfill",
+    "prollyfill",
     "shim"
   ],
   "repository": {

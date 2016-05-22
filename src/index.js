@@ -2,13 +2,10 @@
 // CommonJS because we're using this only to generate the bundle
 
 var TokenList = require('./tokenlist');
-var polyfill = require('./polyfill');
 var prollyfill = require('./prollyfill');
 
-TokenList.polyfill = polyfill;
 TokenList.prollyfill = prollyfill;
 TokenList.init = function(context) {
-  polyfill(context);
   prollyfill(context);
 };
 
@@ -22,7 +19,7 @@ TokenList.noConflict = function() {
   return this;
 };
 
-// initialize polyfill and prollyfill
+// initialize prollyfill
 if (typeof window !== 'undefined') {
   TokenList.init(window);
 }

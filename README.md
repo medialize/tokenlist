@@ -1,8 +1,8 @@
 # TokenList.js
 
-This module is an implementation of the [DOMTokenList Interface](https://dom.spec.whatwg.org/#interface-domtokenlist) based on [jwilsson/domtokenlist](https://github.com/jwilsson/domtokenlist) and [bkardell/tokenListFor](https://github.com/bkardell/tokenListFor).
+This module is an implementation of the [DOMTokenList Interface](https://dom.spec.whatwg.org/#interface-domtokenlist) based on  [jwilsson/domtokenlist](https://github.com/jwilsson/domtokenlist) and [bkardell/tokenListFor](https://github.com/bkardell/tokenListFor).
 
-This module was created to investigate further application for DOMTokenList (as Brian's tokenListFor does), while simultaneously serving as a polyfill for [`classList`](https://developer.mozilla.org/en/docs/Web/API/Element/classList) and [`relList`](https://developer.mozilla.org/en-US/docs/Web/API/HTMLLinkElement/relList).
+This module was created to optimize Brian's initial implementation and investigate further application for DOMTokenList (as Brian's tokenListFor does).
 
 ## The TokenList interface
 
@@ -90,22 +90,6 @@ labelledByList.add(label);
 labelledByList.contains(label) === true;
 labelledByList.remove(label);
 ```
-
-## The polyfill
-
-* Provides [`.classList`](https://developer.mozilla.org/en/docs/Web/API/Element/classList) on [Element](https://developer.mozilla.org/en-US/docs/Web/API/Element) (and [SVGElement](https://developer.mozilla.org/en-US/docs/Web/API/SVGElement) for Internet Explorer 9 - 11)
-* Provides [`.relList`](https://developer.mozilla.org/en-US/docs/Web/API/HTMLLinkElement/relList) on [https://developer.mozilla.org/en-US/docs/Web/API/HTMLAnchorElement](HTMLAnchorElement), [https://developer.mozilla.org/en-US/docs/Web/API/HTMLAreaElement](HTMLAreaElement) and [https://developer.mozilla.org/en-US/docs/Web/API/HTMLLinkElement](HTMLLinkElement)
-* Adds multiple argument support to `.add()` and `.remove()` (for for Internet Explorer 9 - 11)
-* Adds the force argument to `.toggle()` (for for Internet Explorer 9 - 11)
-* Adds the `.replace()` method in browsers that don't already support it
-
-### Limitations
-
-While all [modern browsers have a DOMTokenList implementation](http://caniuse.com/#search=DOMTokenList) and support `.classList`, there are issues that this module does *not* fix:
-
-* Except for WebKit Nightly, no browser properly implemented the [ordered set parser](https://dom.spec.whatwg.org/#concept-ordered-set-parser), which may lead to undesired behavior when dealing with duplicate tokens (e.g. for `<div class="a b a c">` the `.classList.length` *should* yield `3`, but *erroneously* shows `4`).
-* The `classList.value` property is not available everywhere.
-* Requires ES5 (es5-shim will not work), so IE9+
 
 ## The prollyfill
 
