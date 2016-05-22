@@ -7,7 +7,7 @@ define([], function() {
 
     loaderOptions: {
       packages: [
-        { name: 'src', location: 'src/' },
+        { name: 'src', location: 'dist/amd/' },
       ],
     },
 
