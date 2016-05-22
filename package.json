@@ -1,6 +1,6 @@
 {
   "name": "tokenlist",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "DOMTokenList implementation",
   "main": "dist/tokenlist.min.js",
   "scripts": {
