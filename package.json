@@ -1,6 +1,6 @@
 {
   "name": "tokenlist",
-  "version": "0.0.2",
+  "version": "0.1.0",
   "description": "DOMTokenList implementation",
   "main": "dist/tokenlist.min.js",
   "scripts": {
@@ -10,12 +10,13 @@
     "test:browserstack": "intern-runner config=tests/browserstack",
     "test:server": "intern-runner config=tests/browser",
     "lint": "eslint src/**/*.js tests/**/*.js",
-    "build": "npm run build:bundle && npm run build:min",
+    "build": "npm run build:bundle && npm run build:min && npm run build:amd && npm run build:common",
     "prebuild": "mkdirp dist && npm run build:amd",
     "postbuild": "rimraf dist/tokenlist.js*",
     "build:bundle": "browserify src/index.js --debug --standalone TokenList --transform rollupify --transform babelify | exorcist dist/tokenlist.js.map > dist/tokenlist.js",
     "build:min": "uglifyjs dist/tokenlist.js --in-source-map dist/tokenlist.js.map --source-map dist/tokenlist.min.js.map --source-map-url tokenlist.min.js.map --preamble \"/*! ${npm_package_name} - v${npm_package_version} - ${npm_package_homepage} - ${npm_package_license} License */\" --mangle --compress --output dist/tokenlist.min.js",
-    "build:amd": "babel --source-maps --modules amd --out-dir dist/amd src"
+    "build:amd": "babel --source-maps --modules amd --out-dir dist/amd src",
+    "build:common": "babel --source-maps --modules common --out-dir dist/common src"
   },
   "author": "Rodney Rehm <rodney.rehm@medialize.de> (http://rodneyrehm.de/en/)",
   "license": "MIT",
