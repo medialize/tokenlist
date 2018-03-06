@@ -15,7 +15,7 @@ var classList = TokenList(
   // callback used to read the current serialized presentation of the DOMTokenList
   function readString() { return element.getAttribute('class'); },
   // callback used to store the modified serialized presentation of the DOMTokenList
-  function writeString(value) { element.getAttribute('class', value); }
+  function writeString(value) { element.setAttribute('class', value); }
 );
 
 classList.add('gustav');
@@ -45,7 +45,7 @@ var sandboxList = TokenList(
   // callback used to read the current serialized presentation of the DOMTokenList
   function readString() { return element.getAttribute('sandbox'); },
   // callback used to store the modified serialized presentation of the DOMTokenList
-  function writeString(value) { element.getAttribute('sandbox', value); },
+  function writeString(value) { element.setAttribute('sandbox', value); },
 
   // [optional] callback to verify if a token is to be considered supported
   // defaults to null, causing TokenList#supported() to throw an appropriate error
@@ -74,7 +74,7 @@ var labelledByList = TokenList(
   // callback used to read the current serialized presentation of the DOMTokenList
   function readString() { return element.getAttribute('aria-labelledby'); },
   // callback used to store the modified serialized presentation of the DOMTokenList
-  function writeString(value) { element.getAttribute('aria-labelledby', value); },
+  function writeString(value) { element.setAttribute('aria-labelledby', value); },
 
   // ignore supported()
   null,
